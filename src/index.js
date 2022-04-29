@@ -3,6 +3,7 @@ let modal1 = document.querySelector('.modal1');
 let main = document.querySelector('.main');
 let newproj = document.querySelector('.newproj');
 
+
 let newtask = document.querySelector('.newtask')
 
 let input1,input2,done;
@@ -12,10 +13,11 @@ let projects = []; //storing the projects
 
 let projectlist = document.querySelector('.projectlist');
 let tasklist = document.querySelector('.tasklist');
+let currentproj = document.querySelector('.currentproj');
 
 let title = document.querySelector('#title');
 let duedate = document.querySelector('#duedate');
-let priority = document.querySelector('input[name="priority"]:checked').value;
+let priority = document.querySelector('input[name="priority"]:checked');
 let describe = document.querySelector('#describe')
 let submitask = document.querySelector('.submitask');
 let listall = document.querySelectorAll('.listall');
@@ -54,7 +56,7 @@ newproj.addEventListener('click',function(){
         alert('work');
     } */
    
-    /*Onclick of done btn:collects input values and creates a new project using the project constructor,
+    /*Onclick of done btn:collects input values,creates a new project using the project constructor,
         stores it in the array,displays the name and removes the form
     */
     
@@ -71,7 +73,6 @@ newproj.addEventListener('click',function(){
             projectdetails.removeChild(projectdetails.firstChild);
         }
         modal2.style.display = 'none'
-        //jeff.tryevent();
         
     }
     
@@ -97,8 +98,28 @@ let createProject = function(name,desc){
 const createtask = function(title,dates,definition,priority){
     const displayit = function(){
         const listi = document.createElement('li');
-        listi.innerText = title;
-        listi.className = 'taskmember'
+        listi.className = 'taskmember';
+
+        const listname = document.createElement('h5');
+        listname.innerText = title;
+        listname.classList.add('listname');
+
+        const listcheck = document.createElement('input');
+        Object.assign(listcheck,{
+            type:'checkbox',
+            className:'chckbox'
+        }) 
+        
+        //trying to add a delete button image for the todos
+        const delimg = new Image(20,20);
+        delimg.src = 'deletebtn.svg';
+        delimg.classList.add('deleteimg')
+                
+
+        listi.appendChild(listcheck);
+        listi.appendChild(listname);
+        listi.appendChild(delimg);
+        
         tasklist.appendChild(listi);
     }
 
@@ -117,31 +138,55 @@ function thevent(e){
     let ind = Array.from(listall);
     let i = ind.indexOf(e.currentTarget);
 
+    //onclick of each project, remove all the list items displayed for the last viewed
     while(tasklist.firstChild){
         tasklist.removeChild(tasklist.firstChild);
     }
-    //check if it already has the task array and create one if it doesnt
+    
+    /* check if it has the task array,create one if it doesnt, if it does loop through it and
+        create lists for each and display
+    */
      if(!projects[i].tasks){
         projects[i].tasks = [];
     }else{
         for(let j = 0;j<projects[i].tasks.length;j++){
             const listi = document.createElement('li');
-            listi.innerText = projects[i].tasks[j].title;
-            listi.className = 'taskmember'
+            listi.className = 'taskmember';
+
+            const listname = document.createElement('h5');
+            listname.innerText = projects[i].tasks[j].title;
+            listname.classList.add('listname');
+
+            const listcheck = document.createElement('input');
+            Object.assign(listcheck,{
+                type:'checkbox',
+                className:'chckbox'
+            }) 
+            
+            listi.appendChild(listcheck);
+            listi.appendChild(listname);
+                        
             tasklist.appendChild(listi);
         }
     } 
-
     
+
+    currentproj.innerText = projects[i].name;
+    
+    //display the new task form when the new task button is clicked
     newtask.onclick = function animal(){
         modal1.style.display = 'block';    
-        //alert('submit'+i)
     };
 
+    
+    /*get the values of the form element,create a new task using the constructor,
+    add it to the projects task array, display it and remove the form
+    */
     submitask.onclick = function anime(){
         let ti = title.value;
         let du = duedate.value;
         let de = describe.value;
+        let priority = document.querySelector('input[name="priority"]:checked').value;
         let max = createtask(ti,du,de,priority);
         max.displayit();
         projects[i].tasks.push(max);
@@ -149,7 +194,7 @@ function thevent(e){
         title.value = '';
         
     }      
-    //alert('winner'+i);
+  
 }
 
 
