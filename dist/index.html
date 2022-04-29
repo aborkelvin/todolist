@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../src/index.js" defer></script>
+    <link rel="stylesheet" href="../src/style.css">
+</head>
+<body>
+    <header>
+        <h1>TO DO LIST</h1>
+        <h4>Cheers to a new brain  stress free dispensation</h4>
+        <button class="newproj addbtn" type="button">New Project+</button>
+    </header>
+    <div class="sidebar">
+        <h1>Projects</h1>
+        <ul class="projectlist">
+            <!-- <li class="listall">item</li>
+            <li class="listall">sddddddd</li>
+            <li class="listall">ds</li>
+            <li class="listall">dsjfk</li> -->
+        </ul>
+    </div>
+    <main class="main">
+        
+        <div class="modal1">
+            <div class="modalcontent">
+                <form class="taskdetails">
+                    <input type="text" name="title" id="title" placeholder="title">
+                    <label for="duedate">Due Date:
+                    <input type="date" name="duedate" id="duedate"></label>
+                    <textarea name="describe" id="describe" cols="30" rows="10" placeholder="Description"></textarea><br>                    
+                    <fieldset>
+                        <legend>Priority:</legend>                        
+                        <input type="radio" name="priority" id="low" value="low" checked>
+                        <label for="low">Low</label><br>                        
+                        <input type="radio" name="priority" id="medium" value="medium">
+                        <label for="medium">medium</label><br>                        
+                        <input type="radio" name="priority" id="high" value="high">
+                        <label for="high">High</label>
+                    </fieldset>
+                    <button class="submitask" type="button">Submit Task</button>                 
+                </form>
+            </div>
+        </div>  
+        <div class="modal2">
+            <div class="modalcontent2">
+                <form method="get" class="projectdetails">
+                    <!-- <input type="text" name="name" placeholder="Project name" id="name">
+                    <input type="text" name="detail" placeholder="Project description" id="detail">
+                    <button id="done" type="button">Done</button> -->
+                </form>
+            </div>
+        </div>
+        <button class="newtask addbtn" type="button"> Add Task</button>
+        <h1 class="currentproj">indomina</h1>
+        <ol class="tasklist">
+
+        </ol>  
+    </main>
+
+</body>
+</html>

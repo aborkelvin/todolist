@@ -1,0 +1,103 @@
+html{
+    width: 100%;
+    min-height: 100%;
+}
+body{
+    display: grid;
+    background-color: bisque;
+    color: #313866;
+    margin:0px; 
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 15vh 85vh;
+    min-height: 100vw;
+}
+header{
+    padding: 20px 20px 0 40px;
+}
+
+header>*{
+    margin: 0;
+}
+.addbtn{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    background-color: #313866;
+    color:bisque;
+    border-radius: 10px;
+    font-size: larger;
+    height: 50px;
+    width: 150px;
+    outline: none;
+}
+
+
+.sidebar{
+    background-color:#313866;
+    grid-column-start: 1;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    color: wheat;
+    padding-left: 10px;
+}
+.main{
+    background-color:rgb(235, 209, 175);
+    position: relative;
+    padding-left: 50px;
+}
+.modal1{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: none;
+    z-index: 1;
+    background-color: rgb(54, 52, 48,0.5);
+}
+
+.modal2{
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: none;
+    z-index: 1;
+    background-color: rgb(54, 52, 48,0.5);
+}
+.modalcontent{
+    width: 40vw;
+    height: auto;
+    background-color: #313866;
+    color: bisque;
+    margin: 50px 0 0 50px;
+    padding: 10px;
+}
+
+.modalcontent2{
+    width: clamp(270px,30vw,320px);
+    height: auto;
+    background-color: #5d638a;
+    color: bisque;
+    margin: 50px 0 0 50px;
+    padding: 10px;
+}
+form .taskdetails{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+input,textarea{
+    margin:10px 0 10px 10px;
+}
+input[type = text]{
+    width: 250px ;
+}
+
+fieldset{
+    width: clamp(100px,60%,200px);
+    height: auto;
+}
+.projectlist>li,.tasklist{
+    font-size: 28px;
+    padding: 10px;
+}
+
