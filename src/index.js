@@ -110,7 +110,7 @@ const createtask = function(title,dates,definition,priority){
             className:'chckbox'
         }) 
         
-        //trying to add a delete button image for the todos
+        //adds a delete button image for the todos
         const delimg = new Image(20,20);
         delimg.src = 'deletebtn.svg';
         delimg.classList.add('deleteimg')
@@ -130,7 +130,7 @@ const createtask = function(title,dates,definition,priority){
 function miracle(){
      listall.forEach(function(item){
         item.addEventListener("click",thevent)
-    }) 
+    })
 }
 
 function thevent(e){
@@ -162,18 +162,39 @@ function thevent(e){
                 type:'checkbox',
                 className:'chckbox'
             }) 
+
+            //adds a delete button image for the todos
+            const delimg = new Image(20,20);
+            delimg.src = 'deletebtn.svg';
+            delimg.classList.add('deleteimg')
             
             listi.appendChild(listcheck);
             listi.appendChild(listname);
+            listi.appendChild(delimg);
                         
             tasklist.appendChild(listi);
         }
+
+        //adding the delete buttons functionality
+        let theimgs = document.querySelectorAll('.deleteimg');
+        let thelist = document.querySelectorAll('.taskmember');
+
+        let timgs = Array.from(theimgs);
+        theimgs.forEach(function(item){
+            item.onclick = function ubinv(){
+                let triple = timgs.indexOf(item);
+                alert('money ' + triple);
+
+                projects[i].tasks.splice(triple,1) 
+                tasklist.removeChild(thelist[triple]);
+            }
+        })        
     } 
     
 
     currentproj.innerText = projects[i].name;
     
-    //display the new task form when the new task button is clicked
+    //display the form for new task when the new task button is clicked
     newtask.onclick = function animal(){
         modal1.style.display = 'block';    
     };
@@ -193,6 +214,20 @@ function thevent(e){
         modal1.style.display = 'none';
         title.value = '';
         
+        //adding the delete buttons functionality
+        let theimgs = document.querySelectorAll('.deleteimg');
+        
+        let timgs = Array.from(theimgs);
+        let thelist = document.querySelectorAll('.taskmember')
+        theimgs.forEach(function(item){
+            item.onclick = function ubinv(){
+                let triple = timgs.indexOf(item);
+                alert('money ' + triple);
+                projects[i].tasks.splice(triple,1) 
+                tasklist.removeChild(thelist[triple]);
+            }
+        })
+
     }      
   
 }
