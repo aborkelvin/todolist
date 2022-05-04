@@ -50,25 +50,25 @@ newproj.addEventListener('click',function(){
     projectdetails.appendChild(doneb);
     
 
-    /* listall = document.querySelectorAll('.listall');
-    for(let i =0 ;i<listall.length;i++){
-        listall[i].removeEventListener('click',thevent)
-        alert('work');
-    } */
    
-    /*Onclick of done btn:collects input values,creates a new project using the project constructor,
-        stores it in the array,displays the name and removes the form
-    */
-    
+    /*Onclick of done btn:collects input values,creates a new project using the project 
+        constructor,stores it in the projects array,displays the name, adds event listeners
+        to the projects available (calling miracle) then removes the form
+    */  
     function upstage(){
         nameval = input1.value;
         detval = input2.value;
+
         let jeff = createProject(nameval,detval);
+        
         projects.push(jeff);
+        
         jeff.displayit();
+
         listall = document.querySelectorAll('.listall');
         noa = Array.from(listall);
         miracle();
+
         while(projectdetails.firstChild){
             projectdetails.removeChild(projectdetails.firstChild);
         }
@@ -80,7 +80,9 @@ newproj.addEventListener('click',function(){
 
 })
 
-//This creates the constructor for all new projects 
+/*This is the constructor for all new projects,manages the name,description and
+    the display of each project 
+ */
 let createProject = function(name,desc){
     const displayit = function(){
         const listi = document.createElement('li');
@@ -90,11 +92,13 @@ let createProject = function(name,desc){
     }
 
     return{
-        name,desc,displayit//,tasks,tryevent
+        name,desc,displayit
     }
 }
 
-//Creating the new task constructor
+/*Constructor for all new tasks,manages each tasks details,for the display, creates
+    a header,checkbox,image(for delete) and appends them to a list element;
+*/
 const createtask = function(title,dates,definition,priority){
     const displayit = function(){
         const listi = document.createElement('li');
@@ -126,15 +130,18 @@ const createtask = function(title,dates,definition,priority){
     return{ title,dates,definition,priority,displayit}
 }
 
-//Trying out if the display can be changed by clicking the projects
+/*This function adds event listeners for each project's list element available,
+    it's called each time a new project is created
+*/
 function miracle(){
      listall.forEach(function(item){
         item.addEventListener("click",thevent)
     })
 }
 
+
 function thevent(e){
-    //get the index of selected project
+    //gets the index of selected project
     let ind = Array.from(listall);
     let i = ind.indexOf(e.currentTarget);
 
@@ -143,8 +150,9 @@ function thevent(e){
         tasklist.removeChild(tasklist.firstChild);
     }
     
-    /* check if it has the task array,create one if it doesnt, if it does loop through it and
-        create lists for each and display
+    /* check if it has the task array,create one if it doesnt, if it does loop through
+        the tasks,create lists for each,creates a header,checkbox,image(for delete)
+         and appends them to the list element for each;
     */
      if(!projects[i].tasks){
         projects[i].tasks = [];
@@ -175,20 +183,22 @@ function thevent(e){
             tasklist.appendChild(listi);
         }
 
-        //adding the delete buttons functionality
+        /*adding the delete buttons functionality,get all images and lists as arrays,
+            onclick of each img,gets the index of the one clicked,removes the task that
+            has the corresponding index from the task arrays of the current project 
+            then removes the list with corresponding index from the display lists
+        */
         let theimgs = document.querySelectorAll('.deleteimg');
         let thelist = document.querySelectorAll('.taskmember');
-
         let timgs = Array.from(theimgs);
         theimgs.forEach(function(item){
             item.onclick = function ubinv(){
-                let triple = timgs.indexOf(item);
-                alert('money ' + triple);
-
-                projects[i].tasks.splice(triple,1) 
-                tasklist.removeChild(thelist[triple]);
+                let t = timgs.indexOf(item);
+                projects[i].tasks.splice(t,1) 
+                tasklist.removeChild(thelist[t]);
             }
-        })        
+        }) 
+
     } 
     
 
@@ -200,8 +210,8 @@ function thevent(e){
     };
 
     
-    /*get the values of the form element,create a new task using the constructor,
-    add it to the projects task array, display it and remove the form
+    /*gets the values of the form element,creates a new task using the constructor,
+    adds it to the current project's task array, displays it and removes the form
     */
     submitask.onclick = function anime(){
         let ti = title.value;
@@ -209,24 +219,26 @@ function thevent(e){
         let de = describe.value;
         let priority = document.querySelector('input[name="priority"]:checked').value;
         let max = createtask(ti,du,de,priority);
-        max.displayit();
         projects[i].tasks.push(max);
+        max.displayit();
         modal1.style.display = 'none';
         title.value = '';
         
-        //adding the delete buttons functionality
+        /*adding the delete buttons functionality,get all images and lists as arrays,
+        onclick of each img,gets the index of the one clicked,removes the task that
+        has the corresponding index from the task arrays of the current project 
+        then removes the list with corresponding index from the display lists
+        */
         let theimgs = document.querySelectorAll('.deleteimg');
-        
+        let thelist = document.querySelectorAll('.taskmember');
         let timgs = Array.from(theimgs);
-        let thelist = document.querySelectorAll('.taskmember')
         theimgs.forEach(function(item){
             item.onclick = function ubinv(){
-                let triple = timgs.indexOf(item);
-                alert('money ' + triple);
-                projects[i].tasks.splice(triple,1) 
-                tasklist.removeChild(thelist[triple]);
+                let t = timgs.indexOf(item);
+                projects[i].tasks.splice(t,1) 
+                tasklist.removeChild(thelist[t]);
             }
-        })
+        }) 
 
     }      
   
