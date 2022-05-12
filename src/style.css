@@ -138,5 +138,9 @@ fieldset{
 .deleteimg{
     position: absolute;
     right: 10px;
-    top: 15px;
+    top: 18px;
+}
+
+.hover:hover{
+    cursor: pointer;
 }
