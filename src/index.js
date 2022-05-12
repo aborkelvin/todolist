@@ -3,7 +3,6 @@ let modal1 = document.querySelector('.modal1');
 let main = document.querySelector('.main');
 let newproj = document.querySelector('.newproj');
 
-
 let newtask = document.querySelector('.newtask')
 
 let input1,input2,done;
@@ -21,8 +20,67 @@ let priority = document.querySelector('input[name="priority"]:checked');
 let describe = document.querySelector('#describe')
 let submitask = document.querySelector('.submitask');
 let listall = document.querySelectorAll('.listall');
-let noa = Array.from(listall);
 
+//checks for local storage content
+if(JSON.parse(localStorage.getItem('projectstore'))){
+    getProjects();
+}
+
+//stores projects arrays in local storage
+function storeproject(){
+    localStorage.setItem('projectstore',JSON.stringify(projects));
+}
+
+/* Gets projects from local storage,pushes them into the current pages project array,
+    displays each of the projects,calls miracle(which adds their event listeners and
+        displays the tasks in each).
+*/        
+function getProjects(){
+    let redisplayprojects = JSON.parse(localStorage.getItem('projectstore'));
+    for(let i = 0;i<redisplayprojects.length;i++){
+        projects.push(redisplayprojects[i]);
+        displayProj(redisplayprojects[i].name)    
+    }
+    miracle();
+}
+
+
+
+//this creates lists for the projects and displays it
+function displayProj(name){//for separation(later), this is DOM creation so it might be classified there
+    const listi = document.createElement('li');
+    listi.innerText = name;
+    listi.classList.add('listall','hover');
+    projectlist.appendChild(listi);
+}
+
+//this creates display elements for the tasks
+function displaytask(title){//Also DOM creation; for separation
+    const listi = document.createElement('li');
+    listi.className = 'taskmember';
+
+    const listname = document.createElement('h5');
+    listname.innerText = title;
+    listname.classList.add('listname');
+
+    const listcheck = document.createElement('input');
+    Object.assign(listcheck,{
+        type:'checkbox',
+        className:'chckbox'
+    }) 
+    
+    //adds a delete button image for the todos
+    const delimg = new Image(20,20);
+    delimg.src = 'deletebtn.svg';
+    delimg.classList.add('deleteimg','hover')
+            
+
+    listi.appendChild(listcheck);
+    listi.appendChild(listname);
+    listi.appendChild(delimg);
+    
+    tasklist.appendChild(listi);
+}
 
 //Onclick of addproject:This displays the form and creates the input elements for project details
 newproj.addEventListener('click',function(){
@@ -46,29 +104,24 @@ newproj.addEventListener('click',function(){
         innerText: 'Done'
     })
     projectdetails.appendChild(input1);
-    projectdetails.appendChild(input2)
+    projectdetails.appendChild(input2);
     projectdetails.appendChild(doneb);
     
 
    
     /*Onclick of done btn:collects input values,creates a new project using the project 
-        constructor,stores it in the projects array,displays the name, adds event listeners
-        to the projects available (calling miracle) then removes the form
+        constructor,stores it in the projects array,displays the name, updates local storage,
+        adds event listeners to the projects available (calling miracle) then removes the form
     */  
     function upstage(){
         nameval = input1.value;
         detval = input2.value;
-
         let jeff = createProject(nameval,detval);
-        
         projects.push(jeff);
-        
         jeff.displayit();
-
-        listall = document.querySelectorAll('.listall');
-        noa = Array.from(listall);
+        //update projects in local storage
+        storeproject();
         miracle();
-
         while(projectdetails.firstChild){
             projectdetails.removeChild(projectdetails.firstChild);
         }
@@ -85,56 +138,50 @@ newproj.addEventListener('click',function(){
  */
 let createProject = function(name,desc){
     const displayit = function(){
-        const listi = document.createElement('li');
-        listi.innerText = name;
-        listi.className = 'listall';
-        projectlist.appendChild(listi);
+        displayProj(name);
     }
-
     return{
         name,desc,displayit
     }
 }
 
-/*Constructor for all new tasks,manages each tasks details,for the display, creates
-    a header,checkbox,image(for delete) and appends them to a list element;
+/*Constructor for all new tasks,manages each tasks details,for the display;
+    calls displaytask
 */
 const createtask = function(title,dates,definition,priority){
     const displayit = function(){
-        const listi = document.createElement('li');
-        listi.className = 'taskmember';
-
-        const listname = document.createElement('h5');
-        listname.innerText = title;
-        listname.classList.add('listname');
-
-        const listcheck = document.createElement('input');
-        Object.assign(listcheck,{
-            type:'checkbox',
-            className:'chckbox'
-        }) 
-        
-        //adds a delete button image for the todos
-        const delimg = new Image(20,20);
-        delimg.src = 'deletebtn.svg';
-        delimg.classList.add('deleteimg')
-                
-
-        listi.appendChild(listcheck);
-        listi.appendChild(listname);
-        listi.appendChild(delimg);
-        
-        tasklist.appendChild(listi);
+        displaytask(title);
     }
 
     return{ title,dates,definition,priority,displayit}
 }
 
+/*  this gets all images and lists as arrays,onclick of each img;gets the index of 
+    the one clicked,removes the task that has the corresponding index from the task 
+    arrays of the current project then removes the list with corresponding index 
+    from the display lists
+*/
+function deletetask(i){
+    let theimgs = document.querySelectorAll('.deleteimg');
+        let thelist = document.querySelectorAll('.taskmember');
+        let timgs = Array.from(theimgs);
+        theimgs.forEach(function(item){
+            item.onclick = function ubinv(){
+                let t = timgs.indexOf(item);
+                projects[i].tasks.splice(t,1) 
+                storeproject();
+                tasklist.removeChild(thelist[t]);
+            }
+        }) 
+}
+
+
 /*This function adds event listeners for each project's list element available,
     it's called each time a new project is created
 */
 function miracle(){
-     listall.forEach(function(item){
+    listall = document.querySelectorAll('.listall');
+    listall.forEach(function(item){
         item.addEventListener("click",thevent)
     })
 }
@@ -151,53 +198,15 @@ function thevent(e){
     }
     
     /* check if it has the task array,create one if it doesnt, if it does loop through
-        the tasks,create lists for each,creates a header,checkbox,image(for delete)
-         and appends them to the list element for each;
+        the tasks and call dislaytask for each
     */
      if(!projects[i].tasks){
         projects[i].tasks = [];
     }else{
         for(let j = 0;j<projects[i].tasks.length;j++){
-            const listi = document.createElement('li');
-            listi.className = 'taskmember';
-
-            const listname = document.createElement('h5');
-            listname.innerText = projects[i].tasks[j].title;
-            listname.classList.add('listname');
-
-            const listcheck = document.createElement('input');
-            Object.assign(listcheck,{
-                type:'checkbox',
-                className:'chckbox'
-            }) 
-
-            //adds a delete button image for the todos
-            const delimg = new Image(20,20);
-            delimg.src = 'deletebtn.svg';
-            delimg.classList.add('deleteimg')
-            
-            listi.appendChild(listcheck);
-            listi.appendChild(listname);
-            listi.appendChild(delimg);
-                        
-            tasklist.appendChild(listi);
+            displaytask(projects[i].tasks[j].title)
         }
-
-        /*adding the delete buttons functionality,get all images and lists as arrays,
-            onclick of each img,gets the index of the one clicked,removes the task that
-            has the corresponding index from the task arrays of the current project 
-            then removes the list with corresponding index from the display lists
-        */
-        let theimgs = document.querySelectorAll('.deleteimg');
-        let thelist = document.querySelectorAll('.taskmember');
-        let timgs = Array.from(theimgs);
-        theimgs.forEach(function(item){
-            item.onclick = function ubinv(){
-                let t = timgs.indexOf(item);
-                projects[i].tasks.splice(t,1) 
-                tasklist.removeChild(thelist[t]);
-            }
-        }) 
+        deletetask(i);
 
     } 
     
@@ -224,24 +233,10 @@ function thevent(e){
         modal1.style.display = 'none';
         title.value = '';
         
-        /*adding the delete buttons functionality,get all images and lists as arrays,
-        onclick of each img,gets the index of the one clicked,removes the task that
-        has the corresponding index from the task arrays of the current project 
-        then removes the list with corresponding index from the display lists
-        */
-        let theimgs = document.querySelectorAll('.deleteimg');
-        let thelist = document.querySelectorAll('.taskmember');
-        let timgs = Array.from(theimgs);
-        theimgs.forEach(function(item){
-            item.onclick = function ubinv(){
-                let t = timgs.indexOf(item);
-                projects[i].tasks.splice(t,1) 
-                tasklist.removeChild(thelist[t]);
-            }
-        }) 
+        //update projects in local storage
+        storeproject();
 
+        //for deleting the tasks,deletetask is called
+        deletetask(i)
     }      
-  
 }
-
-
