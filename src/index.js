@@ -97,7 +97,7 @@ function displaytask(title){//Also DOM creation; for separation
 
 //Onclick of addproject:This displays the form and creates the input elements for project details
 newproj.addEventListener('click',function(){
-    modal2.style.display = 'block';
+    modal2.style.display = 'flex';
     let input1 = document.createElement('input');
     Object.assign(input1,{
         type:'text',
@@ -199,7 +199,7 @@ function edittask(i){
     edits.forEach(function(item){                 
         let t = timgs.indexOf(item); //gets index of each task or editbtn
         item.onclick = function editor(){
-            modal3.style.display = 'block';
+            modal3.style.display = 'flex';
             editask.onclick = function finishup(){
 
                 //get the new values of the edit form
@@ -265,7 +265,7 @@ function thevent(e){
     
     //display the form for new task when the new task button is clicked
     newtask.onclick = function animal(){
-        modal1.style.display = 'block';    
+        modal1.style.display = 'flex';    
     };    
     
     /*gets the values of the form element,creates a new task using the constructor,

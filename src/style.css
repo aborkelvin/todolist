@@ -18,6 +18,7 @@ header{
 header>*{
     margin: 0;
 }
+
 .addbtn{
     position: absolute;
     right: 20px;
@@ -54,52 +55,65 @@ header>*{
     height: 100%;
     position: fixed;
     display: none;
+    padding-top: 150px;
+    justify-content: center;
+    align-items:flex-start;
     z-index: 1;
     background-color: rgb(54, 52, 48,0.7);
 }
 
-
-.modalcontent{
-    position: absolute;
-    top: 10vh;
-    left: 30vw;
-    width: 40vw;    
-    background-color: #313866;
+.modalcontent{    
+    width: clamp(280px,40vw,550px);    
+    background-color: #313866;    
 }
 
 .crosscontents{
     color: bisque;
-    margin: 50px 0 0 50px;
     padding: 10px;
     height: auto;
 }
 
-.modalcontent2{
-    position: absolute;
-    top: 30vh;
-    left: 30vw;
-    width: clamp(270px,30vw,320px);
-    
+.modalcontent2{    
+    width: clamp(270px,30vw,320px);    
     background-color: #5d638a;
 }
 
-form .taskdetails{
-    display: flex;
-    flex-direction: row;
+.taskdetails{
+    /* 
+    display:flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 5px;
+     */
+    font-size:  clamp(16px, 2vw, 20px); 
 }
+.containdate{
+    margin: 3px 0px 0px 10px;
+}
+.finishbtn{
+    width: 100px;
+    height: 30px;
+    display: block;
+    margin: 10px 0px 3px 10px;
+}
+
 input,textarea{
     margin:10px 0 10px 10px;
 }
-input[type = text]{
-    width: 250px ;
+input[type = text],textarea{
+    width: clamp(250px,75%,400px) ;
+}
+
+input[type=date]{
+    width: clamp(120px,30%,200px);    
 }
 
 fieldset{
-    width: clamp(100px,60%,200px);
+    width: clamp(220px,60%,300px);
     height: auto;
+    margin: 3px 10px;
 }
+
 .projectlist>li,.tasklist{
     font-size: 28px;
     padding: 10px;
@@ -146,4 +160,14 @@ fieldset{
 
 #done{
     margin: 5px 10px;
+}
+
+@media screen and (min-width:1300px) {
+    .taskdetails{/* 
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        flex-direction: row; */
+    }
+    
 }

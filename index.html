@@ -24,9 +24,11 @@
         <div class="modalcontent crosscontents">
             <form class="taskdetails" onsubmit="return false">
                 <input type="text" name="title" id="title" placeholder="title">
-                <label for="duedate">Due Date:
-                <input type="date" name="duedate" id="duedate"></label>
-                <textarea name="describe" id="describe" cols="30" rows="10" placeholder="Description"></textarea><br>                    
+                <div class="containdate">
+                    <label for="duedate">Due Date:
+                    <input type="date" name="duedate" id="duedate"></label>
+                </div>
+                <textarea name="describe" id="describe" cols="30" rows="5" placeholder="Description"></textarea>                    
                 <fieldset>
                     <legend>Priority:</legend>                        
                     <input type="radio" name="priority" id="low" value="low" checked>
@@ -36,7 +38,7 @@
                     <input type="radio" name="priority" id="high" value="high">
                     <label for="high">High</label>
                 </fieldset>
-                <button class="submitask hover" type="button">Submit Task</button>                 
+                <button class="submitask hover finishbtn" type="button">Submit Task</button>                 
             </form>
         </div>
     </div>  
@@ -53,9 +55,11 @@
         <div class="modalcontent crosscontents">
             <form class="taskdetails" onsubmit="return false">
                 <input type="text" name="title2" id="title2" placeholder="title">
-                <label for="duedate2">Due Date:
-                <input type="date" name="duedate2" id="duedate2"></label>
-                <textarea name="describe2" id="describe2" cols="30" rows="10" placeholder="Description"></textarea><br>                    
+                <div class="containdate">
+                    <label for="duedate2">Due Date:
+                    <input type="date" name="duedate2" id="duedate2"></label>
+                </div>
+                <textarea name="describe2" id="describe2" cols="30" rows="5" placeholder="Description"></textarea>                   
                 <fieldset>
                     <legend>Priority:</legend>                        
                     <input type="radio" name="priority2" id="low2" value="low" checked>
@@ -65,7 +69,7 @@
                     <input type="radio" name="priority2" id="high2" value="high">
                     <label for="high2">High</label>
                 </fieldset>
-                <button class="editask hover" type="button">Edit Task</button>                 
+                <button class="editask hover finishbtn" type="button">Edit Task</button>                 
             </form>
         </div>
     </div>
