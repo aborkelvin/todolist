@@ -1,5 +1,6 @@
 let modal2 = document.querySelector('.modal2');
 let modal1 = document.querySelector('.modal1');
+let modal3 = document.querySelector('.modal3');
 let main = document.querySelector('.main');
 let newproj = document.querySelector('.newproj');
 
@@ -19,7 +20,14 @@ let duedate = document.querySelector('#duedate');
 let priority = document.querySelector('input[name="priority"]:checked');
 let describe = document.querySelector('#describe')
 let submitask = document.querySelector('.submitask');
+
+let title2 = document.querySelector('#title2');
+let duedate2 = document.querySelector('#duedate2');
+let describe2 = document.querySelector('#describe2');
+let editask = document.querySelector('.editask');
+
 let listall = document.querySelectorAll('.listall');
+
 
 //checks for local storage content
 if(JSON.parse(localStorage.getItem('projectstore'))){
@@ -72,11 +80,16 @@ function displaytask(title){//Also DOM creation; for separation
     //adds a delete button image for the todos
     const delimg = new Image(20,20);
     delimg.src = '/src/images/deletebtn.svg';
-    delimg.classList.add('deleteimg','hover')
+    delimg.classList.add('deleteimg','hover');
+    
+    const edimg = new Image(20,20);
+    edimg.src='/src/images/editbtn.svg';
+    edimg.classList.add('editimg','hover');
             
 
     listi.appendChild(listcheck);
     listi.appendChild(listname);
+    listi.appendChild(edimg);
     listi.appendChild(delimg);
     
     tasklist.appendChild(listi);
@@ -163,16 +176,52 @@ const createtask = function(title,dates,definition,priority){
 */
 function deletetask(i){
     let theimgs = document.querySelectorAll('.deleteimg');
-        let thelist = document.querySelectorAll('.taskmember');
-        let timgs = Array.from(theimgs);
-        theimgs.forEach(function(item){
-            item.onclick = function ubinv(){
-                let t = timgs.indexOf(item);
-                projects[i].tasks.splice(t,1) 
+    let thelist = document.querySelectorAll('.taskmember');
+    let timgs = Array.from(theimgs);
+    theimgs.forEach(function(item){
+        item.onclick = function ubinv(){
+            let t = timgs.indexOf(item);
+            projects[i].tasks.splice(t,1) 
+            storeproject();//update local storage
+            tasklist.removeChild(thelist[t]);
+        }
+    }) 
+}
+
+
+function edittask(i){    
+    // Get all the editbutton instances and all the task instances 
+    let edits = document.querySelectorAll('.editimg'); 
+    let thelist = document.querySelectorAll('.taskmember'); 
+
+    let timgs = Array.from(edits);
+
+    edits.forEach(function(item){                 
+        let t = timgs.indexOf(item); //gets index of each task or editbtn
+        item.onclick = function editor(){
+            modal3.style.display = 'block';
+            editask.onclick = function finishup(){
+
+                //get the new values of the edit form
+                let ti = title2.value;
+                let du = duedate2.value;
+                let de = describe2.value;
+                let priority = document.querySelector('input[name="priority2"]:checked').value;
+                
+                //update the selected task in the projects array with the new values
+                projects[i].tasks[t].title = ti;
+                projects[i].tasks[t].dates = du;
+                projects[i].tasks[t].definition = de;
+                projects[i].tasks[t].priority = priority;
+
+                //Update the displayed task title, remove the edit form and update local storage
+                thelist[t].childNodes[1].textContent = ti;                
+                modal3.style.display = 'none';
                 storeproject();
-                tasklist.removeChild(thelist[t]);
             }
-        }) 
+
+        }
+    })
 }
 
 
@@ -207,6 +256,7 @@ function thevent(e){
             displaytask(projects[i].tasks[j].title)
         }
         deletetask(i);
+        edittask(i);
 
     } 
     
@@ -216,8 +266,7 @@ function thevent(e){
     //display the form for new task when the new task button is clicked
     newtask.onclick = function animal(){
         modal1.style.display = 'block';    
-    };
-
+    };    
     
     /*gets the values of the form element,creates a new task using the constructor,
     adds it to the current project's task array, displays it and removes the form
@@ -236,7 +285,8 @@ function thevent(e){
         //update projects in local storage
         storeproject();
 
-        //for deleting the tasks,deletetask is called
+        //for deleting and editing the tasks,deletetask and edittask is called
         deletetask(i)
+        edittask(i)
     }      
 }
