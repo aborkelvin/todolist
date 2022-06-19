@@ -79,11 +79,11 @@ function displaytask(title){//Also DOM creation; for separation
     
     //adds a delete button image for the todos
     const delimg = new Image(20,20);
-    delimg.src = '/src/images/deletebtn.svg';
+    delimg.src = 'src/images/deletebtn.svg';
     delimg.classList.add('deleteimg','hover');
     
     const edimg = new Image(20,20);
-    edimg.src='/src/images/editbtn.svg';
+    edimg.src='src/images/editbtn.svg';
     edimg.classList.add('editimg','hover');
             
 
