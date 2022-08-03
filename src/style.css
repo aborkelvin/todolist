@@ -131,27 +131,32 @@ fieldset{
     margin: 0 0 15px 100px;
     background-color: rgb(235, 183, 121);
     border-radius: 10px;
-    width: 40vw;
-    overflow-wrap: break-word;
+    width: clamp(550px,40vw,600px);    
     height: fit-content;
     position: relative;
     padding: 10px;
+    display: flex;    
+    align-items: flex-start;
 }
+
 .chckbox{
     width: 17px;
     height: 17px;
     margin-right: 15px;
 }
-
-.deleteimg{
-    position: absolute;
-    right: 10px;
-    top: 18px;
+.taskmember h5{
+    margin: 5px 5px 0 0;
 }
-.editimg{
-    position: absolute;
-    right: 40px;
-    top: 18px;
+.editcontainer{
+    width: 50px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 8px;
+    justify-content: space-between;
+}
+
+.deleteimg,.editimg{
+    margin-left: 5px;
 }
 
 .hover:hover{
@@ -162,12 +167,21 @@ fieldset{
     margin: 5px 10px;
 }
 
-@media screen and (min-width:1300px) {
+@media screen and (min-width:1000px) {
     .taskdetails{/* 
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
         flex-direction: row; */
     }
+    .taskmember{
+        width: clamp(600px,50vw,650px);        
+    }
     
+}
+
+@media screen and (max-width:1000px) {
+    .taskmember{
+        margin-left: 50px;
+    }
 }

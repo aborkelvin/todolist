@@ -75,9 +75,12 @@ function displaytask(title){//Also DOM creation; for separation
     Object.assign(listcheck,{
         type:'checkbox',
         className:'chckbox'
-    }) 
+    })
+    const checkcontainer = document.createElement('div');
+    checkcontainer.classList.add('checkcontainer'); 
+    checkcontainer.appendChild(listcheck);
     
-    //adds a delete button image for the todos
+    //adds an edit and delete button image for the todos
     const delimg = new Image(20,20);
     delimg.src = 'src/images/deletebtn.svg';
     delimg.classList.add('deleteimg','hover');
@@ -85,13 +88,17 @@ function displaytask(title){//Also DOM creation; for separation
     const edimg = new Image(20,20);
     edimg.src='src/images/editbtn.svg';
     edimg.classList.add('editimg','hover');
+
+    const editcontainer = document.createElement('div');
+    editcontainer.classList.add('editcontainer');
+    editcontainer.appendChild(edimg)
+    editcontainer.appendChild(delimg)
+
             
 
-    listi.appendChild(listcheck);
+    listi.appendChild(checkcontainer);
     listi.appendChild(listname);
-    listi.appendChild(edimg);
-    listi.appendChild(delimg);
-    
+    listi.appendChild(editcontainer);
     tasklist.appendChild(listi);
 }
 
@@ -126,9 +133,18 @@ newproj.addEventListener('click',function(){
         constructor,stores it in the projects array,displays the name, updates local storage,
         adds event listeners to the projects available (calling miracle) then removes the form
     */  
-    function upstage(){
+    function upstage(){        
         nameval = input1.value;
         detval = input2.value;
+
+        if(nameval == ''){
+            alert("Project name can't be empty");            
+            return;
+        }else if(detval == ''){
+            alert("add complete details");
+            return;
+        }
+
         let jeff = createProject(nameval,detval);
         projects.push(jeff);
         jeff.displayit();
@@ -145,6 +161,8 @@ newproj.addEventListener('click',function(){
     doneb.addEventListener('click',upstage)
 
 })
+
+    
 
 /*This is the constructor for all new projects,manages the name,description and
     the display of each project 
@@ -168,6 +186,125 @@ const createtask = function(title,dates,definition,priority){
 
     return{ title,dates,definition,priority,displayit}
 }
+
+// Welcome/introductory message
+function Welcome(){
+    //this stops the welcome message from recreating with each page refresh
+    for(let i = 0;i<projects.length;i++){
+        if(projects[i].name == 'Welcome' && projects[i].desc== 'Guideline to use of app'){
+            currentproj.innerText = projects[0].name;
+            for(let j = 0;j<projects[0].tasks.length;j++){
+                displaytask(projects[0].tasks[j].title)
+            }
+            return;
+        }
+    }
+    let welcomemsg = createProject('Welcome','Guideline to use of app');
+    projects.push(welcomemsg);
+    welcomemsg.displayit();
+    
+    miracle();
+    /*instead of adding the general miracle eventlistener, customize welcome's own cause of different behaviours
+        Will have things to display on page load and different behaviour onclick from other projects*/
+
+    //onpage load
+    if(!projects[0].tasks){
+        projects[0].tasks = [];
+    }
+    currentproj.innerText = projects[0].name;
+    function taskmsg(msg){
+        let welcome1 = createtask(msg,'08/10/2022','no desc','low')
+        projects[0].tasks.push(welcome1);
+        welcome1.displayit();
+        /* deletetask(0)
+        edittask(0)
+        prevent editing for now */
+    }
+    taskmsg('All tasks have to be classified into projects');
+    taskmsg('Click new project on the top right corner to create a new project')
+    taskmsg('click on any project on the side panel and click on add task to add task to the clicked project')
+    
+    //Will rewrite the onclick for this later and commit it then, move to new project for today
+}
+Welcome()
+
+
+/*This function adds event listeners for each project's list element available,
+    it's called each time a new project is created
+*/
+function miracle(){
+    listall = document.querySelectorAll('.listall');
+    listall.forEach(function(item){
+        item.addEventListener("click",thevent)
+    })
+}
+
+
+function thevent(e){
+    //gets the index of selected project
+    let ind = Array.from(listall);
+    let i = ind.indexOf(e.currentTarget);
+
+    //onclick of each project, remove all the list items displayed for the last viewed
+    while(tasklist.firstChild){
+        tasklist.removeChild(tasklist.firstChild);
+    }
+    
+    /* check if it has the task array,create one if it doesnt, if it does loop through
+        the tasks and call dislaytask for each
+    */
+     if(!projects[i].tasks){
+        projects[i].tasks = [];
+    }else{
+        for(let j = 0;j<projects[i].tasks.length;j++){
+            displaytask(projects[i].tasks[j].title)
+        }
+        deletetask(i);
+        edittask(i);
+
+    } 
+    
+
+    currentproj.innerText = projects[i].name;
+    
+    //display the form for new task when the new task button is clicked
+    newtask.onclick = function animal(){
+        modal1.style.display = 'flex';    
+    };    
+    
+    /*gets the values of the form element,creates a new task using the constructor,
+    adds it to the current project's task array, displays it and removes the form
+    */
+    submitask.onclick = function anime(){
+        let ti = title.value;
+        let du = duedate.value;
+        let de = describe.value;
+        let priority = document.querySelector('input[name="priority"]:checked').value;
+
+        if(ti==''){
+            alert("Task title can't be empty");
+            return;
+        }else if(du==''){
+            alert('Add due date');
+            return;
+        }
+
+        let max = createtask(ti,du,de,priority);
+        projects[i].tasks.push(max);
+        max.displayit();
+        modal1.style.display = 'none';
+        title.value = '';
+        
+        //update projects in local storage
+        storeproject();
+
+        //for deleting and editing the tasks,deletetask and edittask is called
+        deletetask(i)
+        edittask(i)
+    }      
+}
+
+
 
 /*  this gets all images and lists as arrays,onclick of each img;gets the index of 
     the one clicked,removes the task that has the corresponding index from the task 
@@ -224,69 +361,3 @@ function edittask(i){
     })
 }
 
-
-/*This function adds event listeners for each project's list element available,
-    it's called each time a new project is created
-*/
-function miracle(){
-    listall = document.querySelectorAll('.listall');
-    listall.forEach(function(item){
-        item.addEventListener("click",thevent)
-    })
-}
-
-
-function thevent(e){
-    //gets the index of selected project
-    let ind = Array.from(listall);
-    let i = ind.indexOf(e.currentTarget);
-
-    //onclick of each project, remove all the list items displayed for the last viewed
-    while(tasklist.firstChild){
-        tasklist.removeChild(tasklist.firstChild);
-    }
-    
-    /* check if it has the task array,create one if it doesnt, if it does loop through
-        the tasks and call dislaytask for each
-    */
-     if(!projects[i].tasks){
-        projects[i].tasks = [];
-    }else{
-        for(let j = 0;j<projects[i].tasks.length;j++){
-            displaytask(projects[i].tasks[j].title)
-        }
-        deletetask(i);
-        edittask(i);
-
-    } 
-    
-
-    currentproj.innerText = projects[i].name;
-    
-    //display the form for new task when the new task button is clicked
-    newtask.onclick = function animal(){
-        modal1.style.display = 'flex';    
-    };    
-    
-    /*gets the values of the form element,creates a new task using the constructor,
-    adds it to the current project's task array, displays it and removes the form
-    */
-    submitask.onclick = function anime(){
-        let ti = title.value;
-        let du = duedate.value;
-        let de = describe.value;
-        let priority = document.querySelector('input[name="priority"]:checked').value;
-        let max = createtask(ti,du,de,priority);
-        projects[i].tasks.push(max);
-        max.displayit();
-        modal1.style.display = 'none';
-        title.value = '';
-        
-        //update projects in local storage
-        storeproject();
-
-        //for deleting and editing the tasks,deletetask and edittask is called
-        deletetask(i)
-        edittask(i)
-    }      
-}
